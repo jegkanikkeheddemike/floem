@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["renderer", "vger", "tiny_skia", "reactive", "editor-core", "examples/*"]
+members = ["renderer", "vger", "tiny_skia", "reactive", "editor-core", "examples/*", "scope_test"]
 
 [workspace.package]
 license = "MIT"

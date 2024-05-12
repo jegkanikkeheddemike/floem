@@ -1,0 +1,9 @@
+[package]
+name = "scope_test"
+edition = "2021"
+license.workspace = true
+version.workspace = true
+
+[dependencies]
+im.workspace = true
+floem = { path = "../" }
