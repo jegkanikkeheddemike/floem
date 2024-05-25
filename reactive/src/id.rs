@@ -36,6 +36,12 @@ impl Id {
     /// Dispose the relevant resources that's linking to this Id, and the all the children
     /// and grandchildren.
     pub(crate) fn dispose(&self) {
+        let _ = RUNTIME.try_with(|runtime| {
+            if let Some(action) = runtime.signal_drops.borrow_mut().remove(self) {
+                action();
+            }
+        });
+
         if let Ok((children, signal)) = RUNTIME.try_with(|runtime| {
             (
                 runtime.children.borrow_mut().remove(self),

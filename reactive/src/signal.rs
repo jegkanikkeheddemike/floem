@@ -122,6 +122,15 @@ impl<T> RwSignal<T> {
             ty: PhantomData,
         }
     }
+
+    pub fn on_drop<CB: Fn() + 'static>(&self, callback: CB) {
+        RUNTIME.with(|runtime| {
+            runtime
+                .signal_drops
+                .borrow_mut()
+                .insert(self.id, Box::new(callback))
+        });
+    }
 }
 impl<T: 'static> RwSignal<T> {
     pub fn new(value: T) -> Self {

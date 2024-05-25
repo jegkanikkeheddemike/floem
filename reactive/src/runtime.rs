@@ -27,6 +27,7 @@ pub(crate) struct Runtime {
     pub(crate) contexts: RefCell<HashMap<TypeId, Box<dyn Any>>>,
     pub(crate) batching: Cell<bool>,
     pub(crate) pending_effects: RefCell<SmallVec<[Rc<dyn EffectTrait>; 10]>>,
+    pub(crate) signal_drops: RefCell<HashMap<Id, Box<dyn FnOnce()>>>,
 }
 
 impl Default for Runtime {
@@ -45,6 +46,7 @@ impl Runtime {
             contexts: Default::default(),
             batching: Cell::new(false),
             pending_effects: RefCell::new(SmallVec::new()),
+            signal_drops: RefCell::new(HashMap::new()),
         }
     }
 

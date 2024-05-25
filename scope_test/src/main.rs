@@ -1,5 +1,4 @@
 use floem::{
-    event::EventPropagation,
     reactive::{create_rw_signal, create_signal},
     views::{button, dyn_container, Decorators},
     IntoView,
@@ -20,20 +19,18 @@ fn app_view() -> impl IntoView {
                 view2().into_any()
             }
         }),
-        button(|| "switch").on_click(move |_| {
-            set_view.update(|v| *v = !*v);
-            EventPropagation::Stop
-        }),
+        button(|| "switch").on_click_stop(move |_| set_view.update(|v| *v = !*v)),
     )
         .style(|s| s.size_full().justify_center().items_center())
 }
 
 fn view1() -> impl IntoView {
-    let signal = create_rw_signal(0i32);
+    let signal_number = create_rw_signal(0i32);
 
-    signal.on_cleanup(move || println!("Signal cleanup"));
+    signal_number.on_drop(move || println!("Signal dropped at value {}", signal_number.get()));
 
-    button(move || format!("View1 = {}", signal.get())).on_cleanup(|| println!("Button cleanup"))
+    button(move || format!("View1 = {}", signal_number.get()))
+        .on_click_stop(move |_| signal_number.update(|v| *v += 1))
 }
 
 fn view2() -> impl IntoView {
